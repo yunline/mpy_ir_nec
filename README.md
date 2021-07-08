@@ -1,3 +1,11 @@
+# mpy_ir_nec #
+
+An NEC protocol decoder. 
+
+e.g.
+
+```python
+#./main.py
 #Based on esp8266
 import machine
 from machine import Pin
@@ -25,3 +33,4 @@ while 1:#Mainloop.
     h=i.get_holding()#Get holding
     if h:
         print("holding",h)
+```
