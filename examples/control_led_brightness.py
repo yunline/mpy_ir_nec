@@ -19,7 +19,7 @@ led.duty(1023)
 while 1:#Mainloop.
     time.sleep(0.1)
     try:
-        data=ir.event_queue.pop()#Get event.
+        data=ir.event_queue.get()#Get event.
         if data==POWER:
             off=1-off
             led.duty(1023 if off else duty)

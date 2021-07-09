@@ -35,7 +35,7 @@ class Queue:
             tmp.left=self.left_in
         self.length+=1
             
-    def pop(self):
+    def get(self):
         if self.right_out==None:
             raise QueueEmptyError("Queue is empty")
         elif self.right_out!=self.left_in:
@@ -49,8 +49,3 @@ class Queue:
             self.right_out=self.left_in=None
             self.length=0
             return tmp.data
-    def get(self):
-        if self.right_out!=None:
-            return self.right_out.data
-        else:
-            raise QueueEmptyError("Queue is empty")
