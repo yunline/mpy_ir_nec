@@ -49,3 +49,6 @@ class Queue:
             self.right_out=self.left_in=None
             self.length=0
             return tmp.data
+
+    def empty(self):
+        return not bool(len(self))

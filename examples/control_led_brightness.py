@@ -1,5 +1,4 @@
 #Based on esp8266
-import machine
 from machine import Pin,PWM
 from ir_nec import IR
 import time
@@ -9,31 +8,37 @@ POWER=(0,1)#Set keys here.
 ADD=(0,4)
 SUB=(0,0)
 
-ir=IR(Pin(14,Pin.IN))
+ir=IR(Pin(14))
+event_queue=ir.get_event_queue()
 led=PWM(Pin(2,Pin.OUT))#ESP12f LED Pin.
 duty=512
 off=1
 led.freq(1000)
 led.duty(1023)
 
+def set_duty(duty):
+    led.duty(duty)
+    print("Duty: %d."%duty)
+
+def change_duty(data):
+    global duty
+    if data==ADD:
+        duty=duty-32 if duty>0 else duty
+        set_duty(duty)
+    elif data==SUB:
+        duty=duty+32 if duty<1023 else duty
+        set_duty(duty)
+
 while 1:#Mainloop.
     time.sleep(0.1)
-    try:
-        data=ir.event_queue.get()#Get event.
+    if not event_queue.empty():
+        data=event_queue.get()#Get event.
         if data==POWER:
             off=1-off
             led.duty(1023 if off else duty)
             print("Turned on" if not off else "Turned off")
-    except QueueEmptyError:
-        pass
+        change_duty(data)
 
-    hold=ir.get_holding()#Get holding
-    if hold and not off:
-        if hold==ADD:
-            duty=duty-32 if duty>0 else duty
-            led.duty(duty)
-            print("Duty: %d."%duty)
-        elif hold==SUB:
-            duty=duty+32 if duty<1023 else duty
-            led.duty(duty)
-            print("Duty: %d."%duty)
+    holding=ir.get_holding()#Get holding
+    if holding and not off:
+        change_duty(holding)

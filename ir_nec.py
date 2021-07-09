@@ -1,6 +1,5 @@
-import machine
 import time
-from uqueue import *
+import uqueue
 
 NEC_HEAD=13500#(9000,4500)
 NEC_LOGIC_0=1120#(560,560)
@@ -10,9 +9,12 @@ NEC_HOLD=11250#(9000,2250)
 class IR:
     def __init__(self,ir_pin):
         self.ir_pin=ir_pin
-        self.ir_pin.irq(trigger=ir_pin.IRQ_FALLING|ir_pin.IRQ_RISING,
-            handler=self._io_callback)
-        self.event_queue=Queue()
+        self.ir_pin.init(ir_pin.IN)
+        self.ir_pin.irq(
+            trigger=ir_pin.IRQ_FALLING|ir_pin.IRQ_RISING,
+            handler=self._io_callback,
+            )
+        self.event_queue=uqueue.Queue()
         self.t0=-1
 
         self.signal_buf=0
@@ -92,6 +94,5 @@ class IR:
         elif dt<0:
             self.last_hold_signal_time=0
             self.last_data=None
-            print("Xd")
         else:
             return self.last_data
