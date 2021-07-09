@@ -56,7 +56,7 @@ class IR:
             self.t0=t
         else:
             dt=t-self.t0
-            if dt<120000:
+            if 0<dt<120000:
                 if irq_pin.value():
                     self.signal_buf=dt
                 else:
@@ -86,7 +86,12 @@ class IR:
         return self.event_queue
     
     def get_holding(self):
-        if time.ticks_us()-self.last_hold_signal_time>150000:
+        dt=time.ticks_us()-self.last_hold_signal_time
+        if dt>150000:
             return None
+        elif dt<0:
+            self.last_hold_signal_time=0
+            self.last_data=None
+            print("Xd")
         else:
             return self.last_data
