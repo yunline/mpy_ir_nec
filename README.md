@@ -1,7 +1,7 @@
 # Micropython IR NEC Decoder #
 An NEC protocol decoder with an event queue based on [micropython](https://github.com/micropython/micropython).  
 
-It is advised that the CPU frequency should be high ( e.g.  `machine.freq(160000000)` ) for higher timing accuracy.
+It is advised that the CPU frequency should be high ( e.g.  `machine.freq(160000000)` on Esp8266) for higher timing accuracy.
 
 e.g.
 
